@@ -1,5 +1,6 @@
 package com.geekbrains.geekspring.controllers;
 
+import com.geekbrains.geekspring.entities.Course;
 import com.geekbrains.geekspring.entities.Student;
 import com.geekbrains.geekspring.services.StudentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,20 @@ public class StudentsController {
         List<Student> allStudents = studentsService.getAllStudentsList();
         model.addAttribute("studentsList", allStudents);
         return "students-list";
+    }
+
+    @RequestMapping(path = "/remove/{id}", method = RequestMethod.GET)
+    @Transactional
+    public String removeStudent(@PathVariable(value = "id") Long idStudent) {
+        studentsService.removeById(idStudent);
+        return "redirect:/students/list";
+    }
+
+    @RequestMapping(path = "/courses/{id}", method = RequestMethod.GET)
+    @Transactional
+    public String showCoursesByStudent(@PathVariable(value = "id") Long idStudent, Model model) {
+        List<Course> studentCourses = studentsService.getCoursesByStudentId(idStudent);
+        model.addAttribute("studentCourses", studentCourses);
+        return "student-courses-list";
     }
 }
