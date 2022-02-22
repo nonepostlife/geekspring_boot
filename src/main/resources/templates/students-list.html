@@ -35,9 +35,7 @@
             <td>
                 <a class="btn btn-primary" th:href="@{'/students/courses/' + ${student.id}}" role="button">Courses
                     Info</a>
-                <button class="btn btn-danger removeBtn" th:href="@{'/students/remove/' + ${student.id}}"
-                        th:attr="entryIndex=${student.id}">Remove
-                </button>
+                <button class="btn btn-danger removeBtn" th:attr="entryIndex=${student.id}">Remove</button>
             </td>
         </tr>
     </table>
