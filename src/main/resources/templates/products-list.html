@@ -1,0 +1,53 @@
+<!--/*@thymesVar id="studentsList" type="java.util.List<com.geekbrains.entities.Student>"*/-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<div th:replace="~{products-navigation :: navi(ProductList)}"/>
+
+<div class="container">
+    <h1>Product List</h1>
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <td>Id</td>
+            <td>Name</td>
+            <td>Price</td>
+            <td>Category</td>
+            <td>Actions</td>
+        </tr>
+        </thead>
+
+        <tr class="myTableRow responsive-row" th:each="product : ${productsList}" th:attr="entryIndex=${product.id}">
+            <td/>
+                <a th:text="${product.id}" th:href="@{'/products/' + ${product.id}}"></a>
+            </td>
+            <td th:text="${product.title}"/>
+            <td th:text="${product.price}"/>
+            <td th:text="${product.getCategory()}"/>
+            <td>
+                <!--                <button class="btn btn-danger removeBtn" th:attr="entryIndex=${product.id}">Remove</button>-->
+                <a class="btn btn-danger" th:href="@{'/products/delete/' + ${product.id}}" role="button">Remove</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+<footer>
+    <div th:insert="~{my-footer :: foot}">
+    </div>
+</footer>
+</html>
