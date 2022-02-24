@@ -19,4 +19,8 @@ public class CategoryService {
     public List<Category> getAllCategoryList() {
         return categoryRepository.findAllByParentIdIsNotNull();
     }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).get();
+    }
 }

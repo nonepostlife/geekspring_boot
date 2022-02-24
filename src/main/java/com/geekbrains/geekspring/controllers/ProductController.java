@@ -53,14 +53,18 @@ public class ProductController {
     @RequestMapping(path = "/add", method = RequestMethod.GET)
     public String showAddForm(Model model) {
         Product product = new Product();
+        Category category = new Category();
         List<Category> categoryList = categoryService.getAllCategoryList();
         model.addAttribute("product", product);
         model.addAttribute("categoryList", categoryList);
+        model.addAttribute("cat", category);
         return "products-add-form";
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST)
-    public String showAddForm(Product product) {
+    public String showAddForm(Category cat, Product product, Model model) {
+        Category category = categoryService.getCategoryById(cat.getId());
+        product.setCategory_id(category);
         productService.addProduct(product);
         return "redirect:/products/list";
     }

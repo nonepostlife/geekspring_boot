@@ -9,7 +9,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column
     private String title;
@@ -21,11 +21,11 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parentId;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,15 +55,14 @@ public class Category {
 
     @Override
     public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < products.size(); i++) {
-//            if (i == products.size() - 1) {
-//                sb.append(products.get(i).getTitle());
-//                break;
-//            }
-//            sb.append(products.get(i).getTitle()).append(", ");
-//        }
-//        return sb.toString();
-        return title;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < products.size(); i++) {
+            if (i == products.size() - 1) {
+                sb.append(products.get(i).getTitle());
+                break;
+            }
+            sb.append(products.get(i).getTitle()).append(", ");
+        }
+        return sb.toString();
     }
 }

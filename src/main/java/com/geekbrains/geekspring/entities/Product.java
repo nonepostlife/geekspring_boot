@@ -69,17 +69,6 @@ public class Product {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (category_id != null) {
-            Category parent = category_id.getParentId();
-            Category sub = category_id;
-            while (parent != null) {
-                sb.append(sub.getTitle()).append(" <-");
-                sub = parent;
-                parent = parent.getParentId();
-            }
-            sb.append(" ").append(sub.getTitle());
-        }
-        return "Product [" + id + ", " + title + ", " + price + " руб., " + sb + "]";
+        return "Product [" + id + ", " + title + ", " + price + " руб., " + getCategory() + "]";
     }
 }
