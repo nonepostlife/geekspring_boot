@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Product</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<html>
+<body>
+
+<div th:replace="~{products-navigation :: navi(ProductList)}"/>
+
+<div class="container">
+    <!--    </form>-->
+    <h1>Add Product</h1>
+    <form th:action="@{/products/add}" th:object="${product}" method="post">
+        <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="${product.title}" class="form-control" id="title"
+                       placeholder="Enter title">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="price" class="col-sm-2 col-form-label">Price</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="${product.price}" class="form-control" id="price"
+                       placeholder="Enter price">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+            <div class="col-sm-10">
+                <select th:field="${cat.id}" id="inputCategory" class="form-control">
+                    <option
+                            th:each="category : ${categoryList}"
+                            th:value="${category.id}"
+                            th:text="${category.title}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
