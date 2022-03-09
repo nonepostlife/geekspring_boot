@@ -14,12 +14,29 @@
 
 <body>
 
-<div th:replace="~{navigation :: navi(AdminDashboard)}" />
+<div th:replace="~{products-navigation :: navi(AdminDashboard)}" />
 
 <div class="container">
-    <h1>Admin Panel</h1>
-    <br>
-    <span th:text="${email}"/>
+    <h1>Product List</h1>
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <td>Id</td>
+            <td>Name</td>
+        </tr>
+        </thead>
+
+        <tr class="myTableRow responsive-row" th:each="role : ${roles}" th:attr="entryIndex=${role.id}">
+            <td/>
+            <a th:text="${role.id}" ></a>
+            </td>
+            <td th:text="${role.name}"/>
+        </tr>
+    </table>
 </div>
 </body>
+<footer>
+    <div th:insert="~{my-footer :: foot}">
+    </div>
+</footer>
 </html>

@@ -5,13 +5,14 @@ import com.geekbrains.geekspring.entities.Product;
 import com.geekbrains.geekspring.services.CategoryService;
 import com.geekbrains.geekspring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/products")
@@ -30,27 +31,38 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    @RequestMapping("/list")
-    public String showProductList(Model model) {
-        List<Product> allProduct = productService.getAllProductList();
-        model.addAttribute("productsList", allProduct);
+    @GetMapping("/list")
+    public String showProductList(Model model,
+                                  @RequestParam(defaultValue = "0") Integer page,
+                                  @RequestParam(defaultValue = "5") Integer pageSize,
+                                  @RequestParam(defaultValue = "id") String sortBy) {
+        Page<Product> productPage = productService.getAllProductList(page, pageSize, sortBy);
+        model.addAttribute("productPage", productPage);
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "/products-list";
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public String showProductById(@PathVariable(value = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "/product";
     }
 
-    @RequestMapping(path = "/delete/{id}", method = RequestMethod.GET)
+    @DeleteMapping(path = "/delete/{id}")
     public String removeProductById(@PathVariable(value = "id") Long id) {
         productService.removeById(id);
         return "redirect:/products/list";
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.GET)
+    @GetMapping(path = "/add")
     public String showAddForm(Model model) {
         Product product = new Product();
         Category category = new Category();
@@ -61,7 +73,7 @@ public class ProductController {
         return "products-add-form";
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    @PostMapping(path = "/add")
     public String showAddForm(Category cat, Product product, Model model) {
         Category category = categoryService.getCategoryById(cat.getId());
         product.setCategory_id(category);
