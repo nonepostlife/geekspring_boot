@@ -26,6 +26,9 @@
                 <li class="nav-item" th:classappend="${activeTab == 'Home' ? 'active' : ''}">
                     <a class="nav-link" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item" th:classappend="${activeTab == 'AdminDashboard' ? 'active' : ''}" sec:authorize="hasRole('ADMIN')" >
+                    <a class="nav-link" th:href="@{/admin}">Admin Dashboard</a>
+                </li>
                 <li class="nav-item" th:classappend="${activeTab == 'ProductList' ? 'active' : ''}">
                     <a class="nav-link" th:href="@{/products/list}">Product List</a>
                 </li>
@@ -33,6 +36,13 @@
                     <a class="nav-link" th:href="@{/products/add}">Add Product</a>
                 </li>
                 <!--<div sec:authorize="isAnonymous()">-->
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="POST">
+                            <input type="submit" class="btn btn-danger" value="Logout"/>
+                        </form>
+                    </li>
+                </div>
             </ul>
         </div>
     </nav>

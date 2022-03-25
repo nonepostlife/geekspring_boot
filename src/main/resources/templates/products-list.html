@@ -31,9 +31,10 @@
         </tr>
         </thead>
 
-        <tr class="myTableRow responsive-row" th:each="product : ${productsList}" th:attr="entryIndex=${product.id}">
+        <tr class="myTableRow responsive-row" th:each="product : ${productPage.content}"
+            th:attr="entryIndex=${product.id}">
             <td/>
-                <a th:text="${product.id}" th:href="@{'/products/' + ${product.id}}"></a>
+            <a th:text="${product.id}" th:href="@{'/products/' + ${product.id}}"></a>
             </td>
             <td th:text="${product.title}"/>
             <td th:text="${product.price}"/>
@@ -44,6 +45,24 @@
             </td>
         </tr>
     </table>
+
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center" th:if="${productPage.totalPages > 0}">
+            <li class="page-item" th:classappend="${!productPage.hasPrevious() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/products/list(page=${productPage.number - 1})}">Previous</a>
+            </li>
+            <li class="page-item" th:classappend="${pageNumber - 1 == productPage.number ? 'active' : ''}" th:each="pageNumber : ${pageNumbers}">
+                <a class="page-link"
+                   th:href="@{/products/list(page=${pageNumber - 1})}"
+                   th:text=${pageNumber}></a>
+            </li>
+            <li class="page-item" th:classappend="${!productPage.hasNext() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/products/list(page=${productPage.number + 1})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
 </div>
 </body>
 <footer>
