@@ -19,6 +19,7 @@
 <div class="container">
     <!--    </form>-->
     <h1>Add Product</h1>
+    <br>
     <form th:action="@{/products/add}" th:object="${product}" method="post">
         <div class="form-group row">
             <label for="title" class="col-sm-2 col-form-label">Title</label>
@@ -49,9 +50,12 @@
             </div>
         </div>
 
+        <br>
+        <br>
+
         <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Add Product</button>
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary btn-width-100">Add Product</button>
             </div>
         </div>
     </form>

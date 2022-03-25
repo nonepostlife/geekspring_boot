@@ -1,4 +1,23 @@
 $(document).ready(function () {
+
+    document.getElementsByName('quantity')[0].addEventListener('change', updateQuantities);
+
+    function updateQuantities() {
+        console.log('sweet');
+        $.post("/app/cart/update");
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8189/app/cart/update",
+            success: function () {
+                if (xhr.readyState === 4) {
+                    console.log(xhr.status);
+                    console.log(xhr.responseText);
+                }},
+            dataType: "json"
+        });
+        //location.reload();
+    }
+
     $('.removeBtn').on('click', function (event) {
         console.log(123);
         let studentId = $(this).attr('entryIndex');

@@ -1,0 +1,77 @@
+<!--/*@thymesVar id="studentsList" type="java.util.List<com.geekbrains.entities.Student>"*/-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Cart Info</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<div th:replace="~{products-navigation :: navi(ProductList)}"/>
+
+<div class="container">
+    <h1>Cart</h1>
+    <br>
+    <form method="post" th:action="@{/cart/update}">
+        <table class="table">
+            <thead>
+            <tr class="thead-dark">
+                <th>Option</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>
+                    Quantity
+                    <input type="submit" value="Update">
+                </th>
+                <th>Sub Total</th>
+            </tr>
+            </thead>
+
+            <tr class="myTableRow responsive-row" th:each="item : ${session.cart}"
+                th:attr="entryIndex=${item.product.id}">
+                <td>
+                    <a th:href="@{'/cart/remove/' + ${item.product.id}}">Delete</a>
+                </td>
+                <td>
+                    <a th:text="${item.product.id}" th:href="@{'/products/' + ${item.product.id}}"></a>
+                </td>
+                <td th:text="${item.product.title}"/>
+                <td th:text="${item.product.price}"/>
+                <td th:text="${item.product.getCategory()}"/>
+                <td>
+                    <input th:attr="entryIndex=${item.product.id}" type="number" th:value="${item.quantity}" name="quantity" min="1" max="99">
+                </td>
+                <td th:text="${item.quantity * item.product.price}"/>
+
+            </tr>
+            <tr>
+                <td colspan="6">Total</td>
+                <td th:text="${total}" style="font-weight: bold"></td>
+            </tr>
+        </table>
+    </form>
+
+    <br>
+    <br>
+
+    <a class="btn btn-primary btn-width-100" th:href="@{'/products/list'}" role="button">Continue Shopping</a>
+</div>
+<br>
+
+</body>
+<footer>
+    <div th:insert="~{my-footer :: foot}">
+    </div>
+</footer>
+</html>

@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Product List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -20,14 +20,16 @@
 
 <div class="container">
     <h1>Product List</h1>
+    <br>
     <table class="table">
         <thead>
         <tr class="thead-dark">
-            <td>Id</td>
-            <td>Name</td>
-            <td>Price</td>
-            <td>Category</td>
-            <td>Actions</td>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th sec:authorize="hasRole('ADMIN')">Actions</th>
+            <th>Buy</th>
         </tr>
         </thead>
 
@@ -39,13 +41,19 @@
             <td th:text="${product.title}"/>
             <td th:text="${product.price}"/>
             <td th:text="${product.getCategory()}"/>
-            <td>
+            <td sec:authorize="hasRole('ADMIN')">
                 <!--                <button class="btn btn-danger removeBtn" th:attr="entryIndex=${product.id}">Remove</button>-->
                 <a class="btn btn-danger" th:href="@{'/products/delete/' + ${product.id}}" role="button">Remove</a>
+            </td>
+            <td>
+                <!--                <button class="btn btn-danger removeBtn" th:attr="entryIndex=${product.id}">Remove</button>-->
+                <a class="btn btn-primary" th:href="@{'/cart/buy/' + ${product.id}}" role="button">Buy</a>
             </td>
         </tr>
     </table>
 
+    <br>
+    <br>
 
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center" th:if="${productPage.totalPages > 0}">
