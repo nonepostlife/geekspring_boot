@@ -77,6 +77,7 @@ public class ProductController {
     public String showAddForm(Category cat, Product product, Model model) {
         Category category = categoryService.getCategoryById(cat.getId());
         product.setCategory_id(category);
+        product.setId(0L);
         productService.addProduct(product);
         return "redirect:/products/list";
     }

@@ -32,7 +32,10 @@
                 <li class="nav-item" th:classappend="${activeTab == 'ProductList' ? 'active' : ''}">
                     <a class="nav-link" th:href="@{/products/list}">Product List</a>
                 </li>
-                <li class="nav-item" th:classappend="${activeTab == 'AddProduct' ? 'active' : ''}">
+                <li class="nav-item" th:classappend="${activeTab == 'Cart' ? 'active' : ''}">
+                    <a class="nav-link" th:href="@{/cart}">Cart</a>
+                </li>
+                <li class="nav-item" th:classappend="${activeTab == 'AddProduct' ? 'active' : ''}" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/products/add}">Add Product</a>
                 </li>
                 <!--<div sec:authorize="isAnonymous()">-->
