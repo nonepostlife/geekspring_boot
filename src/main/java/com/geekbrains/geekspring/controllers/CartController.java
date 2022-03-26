@@ -3,10 +3,15 @@ package com.geekbrains.geekspring.controllers;
 import com.geekbrains.geekspring.entities.CartItem;
 import com.geekbrains.geekspring.entities.Category;
 import com.geekbrains.geekspring.entities.Product;
+import com.geekbrains.geekspring.entities.User;
 import com.geekbrains.geekspring.services.CategoryService;
+import com.geekbrains.geekspring.services.OrderService;
 import com.geekbrains.geekspring.services.ProductService;
+import com.geekbrains.geekspring.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,7 +29,8 @@ import java.util.stream.IntStream;
 public class CartController {
 
     private ProductService productService;
-    private CategoryService categoryService;
+    private OrderService orderService;
+    private UserServiceImpl userService;
 
     @Autowired
     public void setProductService(ProductService productService) {
@@ -32,12 +38,21 @@ public class CartController {
     }
 
     @Autowired
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @Autowired
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     @GetMapping()
     public String index(ModelMap modelMap, HttpSession session) {
+        if (session.getAttribute("cart") == null) {
+            List<CartItem> cart = new ArrayList<CartItem>();
+            session.setAttribute("cart", cart);
+        }
         modelMap.put("total", sum(session));
         return "/cart";
     }
@@ -64,7 +79,20 @@ public class CartController {
     }
 
     @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Long id,
+    public String buyProduct(@PathVariable("id") Long id,
+                             HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        int index = isExists(id.intValue(), cart);
+        int quantity = cart.get(index).getQuantity() - 1;
+        if (quantity > 0) {
+            cart.get(index).setQuantity(quantity);
+        }
+        session.setAttribute("cart", cart);
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id,
                          HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         int index = isExists(id.intValue(), cart);
@@ -84,6 +112,27 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @PostMapping("checkout")
+    public String checkout(HttpServletRequest request, HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart.isEmpty()) {
+            return "redirect:/products/list";
+        }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        User user = userService.findUserByName(username);
+
+        if (orderService.save(user, cart, sum(session))) {
+            session.setAttribute("cart", new ArrayList<CartItem>());
+        }
+        return "redirect:/cart";
+    }
+
     private int isExists(int id, List<CartItem> cart) {
         for (int i = 0; i < cart.size(); i++) {
             if (cart.get(i).getProduct().getId() == id)
@@ -95,7 +144,7 @@ public class CartController {
     private double sum(HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         double sum = 0;
-        for (CartItem i : cart)  {
+        for (CartItem i : cart) {
             sum += i.getQuantity() * i.getProduct().getPrice();
         }
         return sum;

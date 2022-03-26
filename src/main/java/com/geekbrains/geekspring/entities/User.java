@@ -2,6 +2,7 @@ package com.geekbrains.geekspring.entities;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,6 +36,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<Order> orders;
+
     public User() {
     }
 
@@ -56,6 +61,14 @@ public class User {
         this.email = email;
         this.roles = roles;
         this.phone = phone;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 
     public Long getId() {

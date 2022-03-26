@@ -16,12 +16,15 @@
 
 <body>
 
-<div th:replace="~{products-navigation :: navi(ProductList)}"/>
+<div th:replace="~{products-navigation :: navi(Cart)}"/>
 
 <div class="container">
     <h1>Cart</h1>
     <br>
-    <form method="post" th:action="@{/cart/update}">
+    <a class="btn btn-primary" th:href="@{'/products/list'}" role="button">Continue Shopping</a>
+    <br>
+    <form method="post" th:action="@{/cart/checkout}">
+        <br>
         <table class="table">
             <thead>
             <tr class="thead-dark">
@@ -32,7 +35,6 @@
                 <th>Category</th>
                 <th>
                     Quantity
-                    <input type="submit" value="Update">
                 </th>
                 <th>Sub Total</th>
             </tr>
@@ -41,7 +43,7 @@
             <tr class="myTableRow responsive-row" th:each="item : ${session.cart}"
                 th:attr="entryIndex=${item.product.id}">
                 <td>
-                    <a th:href="@{'/cart/remove/' + ${item.product.id}}">Delete</a>
+                    <a th:href="@{'/cart/delete/' + ${item.product.id}}">Delete</a>
                 </td>
                 <td>
                     <a th:text="${item.product.id}" th:href="@{'/products/' + ${item.product.id}}"></a>
@@ -50,22 +52,22 @@
                 <td th:text="${item.product.price}"/>
                 <td th:text="${item.product.getCategory()}"/>
                 <td>
-                    <input th:attr="entryIndex=${item.product.id}" type="number" th:value="${item.quantity}" name="quantity" min="1" max="99">
+                    <a class="btn btn-primary" th:href="@{'/cart/remove/' + ${item.product.id}}" role="button">-</a>
+                    <input th:attr="entryIndex=${item.product.id}" th:value="${item.quantity}" name="quantity" min="1" max="99" style="width: 30px">
+                    <a class="btn btn-primary" th:href="@{'/cart/buy/' + ${item.product.id}}" role="button">+</a>
                 </td>
                 <td th:text="${item.quantity * item.product.price}"/>
 
             </tr>
             <tr>
-                <td colspan="6">Total</td>
+                <td colspan="6" style="text-align: right">Total</td>
                 <td th:text="${total}" style="font-weight: bold"></td>
             </tr>
         </table>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary btn-width-100">CHECKOUT</button>
     </form>
-
-    <br>
-    <br>
-
-    <a class="btn btn-primary btn-width-100" th:href="@{'/products/list'}" role="button">Continue Shopping</a>
 </div>
 <br>
 
